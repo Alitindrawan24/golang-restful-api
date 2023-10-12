@@ -13,7 +13,7 @@ jobs:
     - name: Set up Go
       uses: actions/setup-go@v2
       with:
-        go-version: 1.16  # Sesuaikan dengan versi Go yang Anda gunakan
+        go-version: 1.19  # Sesuaikan dengan versi Go yang Anda gunakan
 
     - name: Check out code
       uses: actions/checkout@v2
