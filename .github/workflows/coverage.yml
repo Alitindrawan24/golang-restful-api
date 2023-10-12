@@ -9,6 +9,16 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
+    services:
+      mysql:
+        image: mysql:latest
+        env:
+          MYSQL_ROOT_PASSWORD: ${{ secrets.DB_PASSWORD }}
+          MYSQL_DATABASE: belajar_golang_restful_api
+        ports:
+          - 3306:3306
+        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
+
     steps:
     - name: Set up Go
       uses: actions/setup-go@v2
@@ -21,10 +31,19 @@ jobs:
     - name: Install dependencies
       run: go get -v -t -d ./...
 
+    - name: Start MySQL Docker Container
+      run: |
+        docker run -d --name mysql-db -e MYSQL_ROOT_PASSWORD=${{ secrets.DB_PASSWORD }} -e MYSQL_DATABASE=mydb -p 3306:3306 mysql:latest
+
     - name: Run tests and generate coverage report
       run: |
         go test -race -coverprofile=coverage.txt -covermode=atomic ./...
         go tool cover -html=coverage.txt -o coverage.html
+
+    - name: Stop MySQL Docker Container
+      run: |
+        docker stop mysql-db
+        docker rm mysql-db
 
     - name: Upload coverage report
       uses: actions/upload-artifact@v2
