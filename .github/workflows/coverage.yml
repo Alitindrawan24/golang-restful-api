@@ -13,6 +13,7 @@ jobs:
       mysql:
         image: mysql:latest
         env:
+          MYSQL_ALLOW_EMPTY_PASSWORD: true,
           MYSQL_ROOT_PASSWORD: ${{ secrets.DB_PASSWORD }}
           MYSQL_DATABASE: belajar_golang_restful_api
         ports:
